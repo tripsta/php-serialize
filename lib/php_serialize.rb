@@ -289,7 +289,7 @@ private
 
 			when 's' # string, s:length:"data";
 				len = string.read_until(':').to_i + 3 # quotes, separator
-				val = string.read(len)[1...-2] # read it, kill useless quotes
+				val = string.read(len)[1...-2].force_encoding('utf-8') # read it, kill useless quotes
 
 			when 'i' # integer, i:123
 				val = string.read_until(';').to_i
