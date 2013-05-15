@@ -78,6 +78,7 @@ class TestPhpSerialize < Test::Unit::TestCase
     assert_equal  "s:6:\"öäü\";", PHP.serialize("öäü")
     assert_equal  PHP.unserialize("s:6:\"öäü\";"), "öäü"
   end
+
 	# Verify assoc is passed down calls.
 	# Slightly awkward because hashes don't guarantee order.
 	def test_assoc
@@ -87,6 +88,24 @@ class TestPhpSerialize < Test::Unit::TestCase
 			phps = [
 				'a:2:{s:4:"hash";a:1:{s:4:"hash";s:5:"smoke";}s:3:"foo";a:2:{i:0;s:3:"bar";i:1;s:3:"baz";}}',
 				'a:2:{s:3:"foo";a:2:{i:0;s:3:"bar";i:1;s:3:"baz";}s:4:"hash";a:1:{s:4:"hash";s:5:"smoke";}}'
+			]
+			serialized = PHP.serialize(ruby, true)
+			assert phps.include?(serialized)
+			unserialized = PHP.unserialize(serialized, true)
+			assert_equal ruby_assoc.sort, unserialized.sort
+		end
+	end
+
+	# Multibyte version.
+	# Verify assoc is passed down calls.
+	# Slightly awkward because hashes don't guarantee order.
+	def test_assoc_multibyte
+		assert_nothing_raised do
+			ruby = {'ああ' => ['öäü','漢字'], 'hash' => {'おはよう' => 'smoke'}}
+			ruby_assoc = [['ああ', ['öäü','漢字']], ['hash', [['おはよう','smoke']]]]
+			phps = [
+				'a:2:{s:6:"ああ";a:2:{i:0;s:6:"öäü";i:1;s:6:"漢字";}s:4:"hash";a:1:{s:12:"おはよう";s:5:"smoke";}}',
+				'a:2:{s:4:"hash";a:1:{s:12:"おはよう";s:5:"smoke";}s:6:"ああ";a:2:{i:0;s:6:"öäü";i:1;s:6:"漢字";}}'
 			]
 			serialized = PHP.serialize(ruby, true)
 			assert phps.include?(serialized)
