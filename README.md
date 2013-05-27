@@ -29,5 +29,5 @@ Edward Speyer, fix for assoc serialization in nested structures.
 
 
 
-Author: Thomas Hurst <tom@hur.st>, http://hur.st/
+Original Author: Thomas Hurst <tom@hur.st>, http://hur.st/
 WWW: http://www.aagh.net/projects/ruby-php-serialize
