@@ -1,6 +1,8 @@
 Ruby PHP Serializer
 ===================
 
+[![Build Status](https://travis-ci.org/keichan34/php-serialize.png)](https://travis-ci.org/keichan34/php-serialize)
+
 This module provides two methods: PHP.serialize() and PHP.unserialize(), both
 of which should be compatible with the similarly named functions in PHP.
 

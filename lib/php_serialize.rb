@@ -199,8 +199,8 @@ module PHP
 		classmap ||= {}
 
 		ret = nil
-		original_encoding = string.encoding
-		string = StringIOReader.new(string.force_encoding('BINARY'))
+		original_encoding = string.encoding if string.respond_to?(:encoding)
+		string = StringIOReader.new(string.respond_to?(:force_encoding) ? string.force_encoding('BINARY') : string)
 		while string.string[string.pos, 32] =~ /^(\w+)\|/ # session_name|serialized_data
 			ret ||= {}
 			string.pos += $&.size
@@ -238,7 +238,11 @@ private
 
 				if array
 					vals.collect! do |key,value|
-						value.kind_of?(String) ? value.force_encoding(original_encoding) : value
+						if value.respond_to? :force_encoding
+							value.kind_of?(String) ? value.force_encoding(original_encoding) : value
+						else
+							value
+						end
 					end
 				else
 					if assoc
@@ -246,8 +250,12 @@ private
 					else
 						val = Hash.new
 						vals.each do |key,value|
-							key = key.force_encoding(original_encoding) if key.kind_of?(String)
-							value = value.force_encoding(original_encoding) if value.kind_of?(String)
+
+							if value.respond_to? :force_encoding
+								key = key.force_encoding(original_encoding) if key.kind_of?(String)
+								value = value.force_encoding(original_encoding) if value.kind_of?(String)
+							end
+
 							val[key] = value
 						end
 					end
@@ -292,7 +300,8 @@ private
 
 			when 's' # string, s:length:"data";
 				len = string.read_until(':').to_i + 3 # quotes, separator
-				val = string.read(len)[1...-2].force_encoding(original_encoding) # read it, kill useless quotes
+				val = string.read(len)[1...-2] # read it, kill useless quotes
+				val = val.force_encoding(original_encoding) if val.respond_to?(:force_encoding)
 
 			when 'i' # integer, i:123
 				val = string.read_until(';').to_i
