@@ -16,4 +16,6 @@ Gem::Specification.new do |spec|
 	EOF
 	spec.test_file = 'test.rb'
 	spec.has_rdoc = true
+
+	spec.add_development_dependency "test-unit"
 end
