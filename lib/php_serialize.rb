@@ -295,7 +295,11 @@ private
 				end
 
 				attrs.each do |attr,attrassign,v|
-					val.__send__(attrassign, v)
+					begin
+						val.__send__(attrassign, v)
+					rescue Exception => e
+						puts e
+					end
 				end
 
 			when 's' # string, s:length:"data";
@@ -312,10 +316,16 @@ private
 			when 'N' # NULL, N;
 				val = nil
 
+			when 'r' # NULL, N;
+				val = string.read_until(';').to_i
+				# val = nil
+
 			when 'b' # bool, b:0 or 1
 				val = (string.read(2)[0] == ?1 ? true : false)
 
 			else
+				puts type
+				puts string.read(100)
 				raise TypeError, "Unable to unserialize type '#{type}'"
 		end
 

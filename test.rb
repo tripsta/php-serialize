@@ -73,6 +73,16 @@ class TestPhpSerialize < Test::Unit::TestCase
 	test TestClass.new("Foo", 65), 'O:9:"testclass":2:{s:4:"name";s:3:"Foo";s:5:"value";i:65;}',
 		:name => 'Class'
 
+
+	test 'true', "Partner_Tracking_Code|a:1:{s:11:\"\0*\0_isValid\";N;}"
+		def test_big_data
+			contents = File.read('test_session.txt')
+			# contents = "Partner_Tracking_Code|a:1:{s:11:\"\0*\0_isValid\";N;}"
+
+			assert_equal 'asdfasdfad', PHP.unserialize(contents)['User']
+		end
+
+
   # PHP counts multibyte string, not string length
   def test_multibyte_string
     assert_equal  "s:6:\"öäü\";", PHP.serialize("öäü")
