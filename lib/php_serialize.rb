@@ -315,6 +315,9 @@ private
 			when 'b' # bool, b:0 or 1
 				val = (string.read(2)[0] == ?1 ? true : false)
 
+			when 'r' # reference to another object, r:45
+				val = string.read_until(';').to_i
+
 			else
 				raise TypeError, "Unable to unserialize type '#{type}'"
 		end

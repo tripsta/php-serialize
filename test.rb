@@ -128,6 +128,13 @@ class TestPhpSerialize < Test::Unit::TestCase
 		end
 	end
 
+	def test_reference
+		php = 'a:1:{s:3:"uid";r:45;}'
+		ruby = {"uid" => 45}
+		unserialized = PHP.unserialize(php)
+		assert_equal ruby, unserialized
+	end
+
   def test_new_struct_creation
     assert_nothing_raised do
       phps = 'O:8:"stdClass":2:{s:3:"url";s:17:"/legacy/index.php";s:8:"dateTime";s:19:"2012-10-24 22:29:13";}'
